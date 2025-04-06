@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "savvywallet",
+      "type": "io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty",
+      "sourceType": "io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty"
+    },
+    {
+      "name": "savvywallet.seguranca",
+      "type": "io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty$Seguranca",
+      "sourceType": "io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty",
+      "sourceMethod": "getSeguranca()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "savvywallet.seguranca.enable-https",
+      "type": "java.lang.Boolean",
+      "sourceType": "io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty$Seguranca"
+    }
+  ],
+  "hints": []
+}
