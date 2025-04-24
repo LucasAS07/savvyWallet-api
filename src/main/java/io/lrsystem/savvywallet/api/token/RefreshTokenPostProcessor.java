@@ -3,6 +3,7 @@ package io.lrsystem.savvywallet.api.token;
 import io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("deprecation")
 @ControllerAdvice
 @Configuration
+@Profile("oauth-security")
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
 
     @Autowired
@@ -55,7 +57,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
     }
 
     private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(savvyWalletApiProperty.getSeguranca().isEnableHttps());
         refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");

@@ -20,9 +20,9 @@ public class TokenResource {
 
     @DeleteMapping("/revoke")
     public void revoke(HttpServletRequest req, HttpServletResponse resp){
-        Cookie cookie = new Cookie("refreshToken", null);
+        Cookie cookie = new Cookie("refresh-token", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(savvyWalletApiProperty.getSeguranca().isEnableHttps());
+        cookie.setSecure(false);
         cookie.setPath(req.getContextPath() + "/oauth/token");
         cookie.setMaxAge(0);
 

@@ -1,6 +1,7 @@
 package io.lrsystem.savvywallet.api.token;
 
 import org.apache.catalina.util.ParameterMap;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Profile("oauth-security")
 public class RefreshTokenPreProcessorFilter implements Filter {
 
     @Override
@@ -49,10 +51,12 @@ public class RefreshTokenPreProcessorFilter implements Filter {
             this.refreshToken = refreshToken;
         }
 
+
+
         @Override
         public Map<String, String[]> getParameterMap() {
-            ParameterMap<String,String[]> map = new ParameterMap<>(getRequest().getParameterMap());
-            map.put("refresh_token", new String[] {refreshToken});
+            ParameterMap<String, String[]> map = new ParameterMap<>(getRequest().getParameterMap());
+            map.put("refresh_token", new String[] { refreshToken });
             map.setLocked(true);
             return map;
         }
