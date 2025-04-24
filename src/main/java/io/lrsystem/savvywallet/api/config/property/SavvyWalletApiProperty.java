@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("savvywallet")
 public class SavvyWalletApiProperty {
 
-    private String originPermitida = "http://localhost:8000";
+    private String originPermitida = "http://192.168.3.5:4200";
 
     private final Seguranca seguranca = new Seguranca();
 

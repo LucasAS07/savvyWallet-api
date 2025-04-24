@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import io.lrsystem.savvywallet.api.security.util.UsuarioSistema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,11 +24,15 @@ public class AppUserDetailService implements UserDetailsService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Override
+    @Override   // o método carrega pelo email do usuário.
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
         Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha incorretos"));
-        return new User(email, usuario.getSenha(), getPermissoes(usuario));
+        // Retorna email, senhas e permissões.
+
+        // Retornar UsuarioSistema para ser recuperado no CustomTokenEnhancer
+        return new UsuarioSistema(usuario, getPermissoes(usuario));
     }
 
     private Collection<? extends GrantedAuthority> getPermissoes(Usuario usuario) {
