@@ -1,12 +1,9 @@
 package io.lrsystem.savvywallet.api.resource;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty;
+import io.lrsystem.savvywallet.api.dto.Anexo;
+import io.lrsystem.savvywallet.api.dto.LancamentoEstatisticaCategoria;
+import io.lrsystem.savvywallet.api.dto.LancamentoEstatisticaDia;
 import io.lrsystem.savvywallet.api.event.RecursoCriadoEvent;
 import io.lrsystem.savvywallet.api.exceptionHandler.AlgamoneyExceptionHandler.Erro;
 import io.lrsystem.savvywallet.api.model.Lancamento;
@@ -15,17 +12,32 @@ import io.lrsystem.savvywallet.api.repository.filter.LancamentoFilter;
 import io.lrsystem.savvywallet.api.repository.projection.ResumoLancamento;
 import io.lrsystem.savvywallet.api.service.LancamentoService;
 import io.lrsystem.savvywallet.api.service.exception.PessoaInexistenteOuInativaException;
-
+import io.lrsystem.savvywallet.api.storage.S3;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/lancamento")
@@ -42,6 +54,9 @@ public class LancamentoResource {
     
 	@Autowired
 	private MessageSource messageSource;
+
+	@Autowired
+	private S3 s3;
 	
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA')")
@@ -95,5 +110,41 @@ public class LancamentoResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long codigo) {
 		lancamentoRepository.deleteById(codigo);
+
 	}
+
+	@GetMapping("/estastistica/por-categoria")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+	public List<LancamentoEstatisticaCategoria> porCategoria(){
+		return this.lancamentoRepository.porCategoria(LocalDate.now());
+	}
+
+	@GetMapping("/estastistica/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+	public List<LancamentoEstatisticaDia> porDia(){
+		return this.lancamentoRepository.porDia(LocalDate.now());
+	}
+
+	@GetMapping("relatorio/por-pessoa")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+	public ResponseEntity<byte[]> relatorioPorPessoa(@RequestParam @DateTimeFormat(pattern ="yyyy-MM-dd")
+													 LocalDate inicio,
+													 @RequestParam @DateTimeFormat(pattern ="yyyy-MM-dd")
+													 LocalDate fim) throws Exception {
+		byte[] relatorio = lancamentoService.relatorioPorPessoa(inicio,fim);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+				.body(relatorio);
+	}
+
+	@PostMapping("/anexo")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
+	public Anexo uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+
+		String nome = s3.salvarTemporariamente(anexo);
+
+		return new Anexo(nome, s3.configurarUrl(nome));
+	}
+
 }
