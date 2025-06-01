@@ -2,8 +2,6 @@ package io.lrsystem.savvywallet.api.token;
 
 import io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -17,13 +15,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("deprecation")
 @ControllerAdvice
-@Configuration
-@Profile("oauth-security")
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
 
     @Autowired
@@ -36,28 +33,27 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 
     @Override
     public OAuth2AccessToken beforeBodyWrite(OAuth2AccessToken body, MethodParameter returnType,
-                                             MediaType selectedContentType,
-                                             Class<? extends HttpMessageConverter<?>> selectedConverterType,
-                                             ServerHttpRequest request, ServerHttpResponse response) {
+                                             MediaType selectedContentType, Class<? extends
+                    HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
+                                             ServerHttpResponse response) {
+        HttpServletRequest req = ((ServletServerHttpRequest)request).getServletRequest();
+        HttpServletResponse resp = ((ServletServerHttpResponse)response).getServletResponse();
 
-        HttpServletRequest req = ((ServletServerHttpRequest) request).getServletRequest();
-        HttpServletResponse resp = ((ServletServerHttpResponse) response).getServletResponse();
-
-        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) body;
-
+        DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) body; 
+        
         String refreshToken = body.getRefreshToken().getValue();
         adicionarRefreshTokenNoCookie(refreshToken, req, resp);
-        removeRefreshTokendoBody(token);
+        removerRefreshTokenDoBody(token);
 
         return body;
     }
 
-    private void removeRefreshTokendoBody(DefaultOAuth2AccessToken token) {
+    private void removerRefreshTokenDoBody(DefaultOAuth2AccessToken token) {
         token.setRefreshToken(null);
     }
 
     private void adicionarRefreshTokenNoCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
-        Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(savvyWalletApiProperty.getSeguranca().isEnableHttps());
         refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");

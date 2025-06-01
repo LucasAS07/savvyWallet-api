@@ -10,4 +10,11 @@ VALUES
     ('Alimentação'),
     ('Supermecado'),
     ('Farmacia'),
-    ('Outros');
+    ('Outros'),
+    ('Delivery'),
+    ('Combustivel'),
+    ('Pedagio'),
+    ('Moradia'),
+    ('Agua'),
+    ('Energia'),
+    ('Internet');

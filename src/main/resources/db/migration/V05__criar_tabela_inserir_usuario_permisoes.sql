@@ -22,8 +22,13 @@ create table usuario_permissao
     foreign key (codigo_permissao) references permissao(codigo)
 );
 
-INSERT INTO usuario (codigo, nome, email, senha) values (1, 'Administrador', 'admin@algamoney.com', '$2a$10$X607ZPhQ4EgGNaYKt3n4SONjIv9zc.VMWdEuhCuba7oLAL5IvcL5.');
-INSERT INTO usuario (codigo, nome, email, senha) values (2, 'Maria Silva', 'maria@algamoney.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+INSERT INTO usuario (codigo, nome, email, senha)
+values (1, 'Administrador',
+        'lucas-oliveira25@outlook.com',
+        '$2a$10$0xoV1UTFyH8MVlTttsMY8.N9PrRewdbl2RrS3vOdNC.VeyO0RZvA2');
+INSERT INTO usuario (codigo, nome, email, senha)
+values (2, 'Teste',
+        'teste@email.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
 
 INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA');
 INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_PESQUISAR_CATEGORIA');

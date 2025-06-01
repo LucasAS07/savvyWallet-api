@@ -3,8 +3,6 @@ package io.lrsystem.savvywallet.api.config.property;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.sound.midi.MidiChannel;
-
 @Component
 @ConfigurationProperties("savvywallet")
 public class SavvyWalletApiProperty {
