@@ -17,14 +17,20 @@ public class PessoaService {
 	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
 		Pessoa pessoaSalva = buscarPessoaPeloCodigo(codigo);
 
+		// Limpa os contatos existentes
 		pessoaSalva.getContatos().clear();
-		pessoaSalva.getContatos().addAll(pessoa.getContatos());
 
-		pessoaSalva.getContatos().forEach(c -> c.setPessoa(pessoaSalva));
-		
+		// Adiciona novos contatos, se não forem nulos
+		if (pessoa.getContatos() != null) {
+			pessoaSalva.getContatos().addAll(pessoa.getContatos());
+			pessoaSalva.getContatos().forEach(c -> c.setPessoa(pessoaSalva));
+		}
+
+		// Copia as demais propriedades, exceto codigo e contatos
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo", "contatos");
+
 		return pessoaRepository.save(pessoaSalva);
-	}   
+	}
 
 	
 	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {

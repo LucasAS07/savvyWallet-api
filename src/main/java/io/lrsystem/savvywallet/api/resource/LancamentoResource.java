@@ -1,6 +1,5 @@
 package io.lrsystem.savvywallet.api.resource;
 
-import io.lrsystem.savvywallet.api.config.property.SavvyWalletApiProperty;
 import io.lrsystem.savvywallet.api.dto.Anexo;
 import io.lrsystem.savvywallet.api.dto.LancamentoEstatisticaCategoria;
 import io.lrsystem.savvywallet.api.dto.LancamentoEstatisticaDia;
@@ -13,7 +12,6 @@ import io.lrsystem.savvywallet.api.repository.projection.ResumoLancamento;
 import io.lrsystem.savvywallet.api.service.LancamentoService;
 import io.lrsystem.savvywallet.api.service.exception.PessoaInexistenteOuInativaException;
 import io.lrsystem.savvywallet.api.storage.S3;
-import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -31,9 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -113,13 +109,13 @@ public class LancamentoResource {
 
 	}
 
-	@GetMapping("/estastistica/por-categoria")
+	@GetMapping("/estatistica/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	public List<LancamentoEstatisticaCategoria> porCategoria(){
 		return this.lancamentoRepository.porCategoria(LocalDate.now());
 	}
 
-	@GetMapping("/estastistica/por-dia")
+	@GetMapping("/estatistica/por-dia")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
 	public List<LancamentoEstatisticaDia> porDia(){
 		return this.lancamentoRepository.porDia(LocalDate.now());
