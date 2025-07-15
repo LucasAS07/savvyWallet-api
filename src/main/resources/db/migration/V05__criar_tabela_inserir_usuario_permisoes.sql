@@ -23,12 +23,16 @@ create table usuario_permissao
 );
 
 INSERT INTO usuario (codigo, nome, email, senha)
-values (1, 'Administrador',
+values (1, 'Lucas Rodrigues',
         'lucas-oliveira25@outlook.com',
         '$2a$10$0xoV1UTFyH8MVlTttsMY8.N9PrRewdbl2RrS3vOdNC.VeyO0RZvA2');
 INSERT INTO usuario (codigo, nome, email, senha)
 values (2, 'Teste',
         'teste@email.com', '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
+INSERT INTO usuario (codigo, nome, email, senha)
+values (3, 'Administrador',
+        'admin@email.com',
+        '$2a$10$Zc3w6HyuPOPXamaMhh.PQOXvDnEsadztbfi6/RyZWJDzimE8WQjaq');
 
 INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA');
 INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_PESQUISAR_CATEGORIA');
@@ -54,6 +58,15 @@ INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 8);
 -- maria
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 2);
 INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 8);
+
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 1);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 2);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 3);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 4);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 5);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 6);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 7);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (3, 8);
 
 
 
